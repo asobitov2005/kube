@@ -1,0 +1,22 @@
+fullnameOverride: dotnet-api
+image:
+  repository: ghcr.io/asobitov2005/kube-dotnet-api
+  tag: local
+containerPort: 8080
+env:
+  DB_HOST: postgres-pooler-rw.demo-apps.svc.cluster.local
+  DB_PORT: "5432"
+  DB_NAME: app
+secretEnv:
+  - name: DB_USER
+    secretName: app-db-credentials
+    key: username
+  - name: DB_PASSWORD
+    secretName: app-db-credentials
+    key: password
+ingress:
+  hosts:
+    - host: dotnet.example.com
+      paths:
+        - path: /
+          pathType: Prefix

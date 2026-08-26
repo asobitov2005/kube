@@ -1,0 +1,11 @@
+fullnameOverride: go-api
+image:
+  repository: ghcr.io/asobitov2005/kube-go-api
+  tag: local
+containerPort: 8080
+ingress:
+  hosts:
+    - host: go.example.com
+      paths:
+        - path: /
+          pathType: Prefix

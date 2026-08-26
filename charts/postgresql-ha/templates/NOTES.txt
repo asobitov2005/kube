@@ -1,0 +1,8 @@
+PostgreSQL holati:
+  kubectl get cluster,pooler,pods,pvc -n {{ .Release.Namespace }}
+
+Ilovalar ulanadigan manzil:
+  {{ .Values.pooler.name }}.{{ .Release.Namespace }}.svc.cluster.local:5432
+
+Diqqat: protectFromDeletion=true sabab Helm uninstall PostgreSQL Cluster resursini saqlab qoladi.
+

@@ -1,0 +1,11 @@
+fullnameOverride: busybox-web
+image:
+  repository: ghcr.io/asobitov2005/kube-busybox-web
+  tag: local
+containerPort: 8080
+ingress:
+  hosts:
+    - host: busybox.example.com
+      paths:
+        - path: /
+          pathType: Prefix

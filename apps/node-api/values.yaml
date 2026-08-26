@@ -1,0 +1,11 @@
+fullnameOverride: node-api
+image:
+  repository: ghcr.io/asobitov2005/kube-node-api
+  tag: local
+containerPort: 8080
+ingress:
+  hosts:
+    - host: node.example.com
+      paths:
+        - path: /
+          pathType: Prefix

@@ -1,0 +1,11 @@
+.env
+*.local
+*.log
+.idea/
+.vscode/
+bin/
+obj/
+node_modules/
+target/
+__pycache__/
+

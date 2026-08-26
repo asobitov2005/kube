@@ -1,0 +1,22 @@
+instances: 3
+storage:
+  size: 50Gi
+  storageClass: fast-retain
+affinity:
+  antiAffinityType: required
+pooler:
+  instances: 3
+  maxClientConnections: "1000"
+  defaultPoolSize: "30"
+backup:
+  enabled: true
+  schedule: "0 0 0 * * *"
+  method: volumeSnapshot
+resources:
+  requests:
+    cpu: 500m
+    memory: 1Gi
+  limits:
+    cpu: "2"
+    memory: 4Gi
+

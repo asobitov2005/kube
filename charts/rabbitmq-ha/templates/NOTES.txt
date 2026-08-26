@@ -1,0 +1,8 @@
+RabbitMQ holati:
+  kubectl get rabbitmqcluster,pods,pvc -n {{ .Release.Namespace }}
+
+Credential:
+  kubectl get secret {{ .Values.name }}-default-user -n {{ .Release.Namespace }} -o jsonpath='{.data.username}' | base64 -d
+
+AMQP Service: {{ .Values.name }}.{{ .Release.Namespace }}.svc.cluster.local:5672
+

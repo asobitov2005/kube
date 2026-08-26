@@ -1,0 +1,7 @@
+apiVersion: v2
+name: rabbitmq-ha
+description: RabbitMQ Cluster Operator uchun qayta ishlatiladigan HA chart
+type: application
+version: 0.1.0
+appVersion: "4"
+

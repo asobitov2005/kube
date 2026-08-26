@@ -1,0 +1,9 @@
+replicaCount: 2
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 1
+autoscaling:
+  enabled: false
+ingress:
+  enabled: true
+

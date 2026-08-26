@@ -1,0 +1,39 @@
+clusterName: postgres-ha
+instances: 1
+database:
+  name: app
+  owner: app
+  credentialsSecret: app-db-credentials
+storage:
+  size: 2Gi
+  storageClass: ""
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    cpu: "1"
+    memory: 1Gi
+affinity:
+  antiAffinityType: preferred
+  topologyKey: kubernetes.io/hostname
+pooler:
+  enabled: true
+  name: postgres-pooler-rw
+  instances: 1
+  poolMode: transaction
+  maxClientConnections: "500"
+  defaultPoolSize: "20"
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 250m
+      memory: 256Mi
+backup:
+  enabled: false
+  schedule: "0 0 0 * * *"
+  method: volumeSnapshot
+protectFromDeletion: true
+

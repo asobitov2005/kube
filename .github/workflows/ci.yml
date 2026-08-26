@@ -1,0 +1,66 @@
+name: Barcha servislar CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+    paths:
+      - "apps/**"
+      - "charts/**"
+      - ".github/workflows/**"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  packages: write
+
+concurrency:
+  group: kube-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        service:
+          - dotnet-api
+          - python-api
+          - node-api
+          - go-api
+          - java-api
+          - php-api
+          - ruby-api
+          - rust-api
+          - nginx-web
+          - caddy-web
+          - busybox-web
+    uses: ./.github/workflows/reusable-build.yml
+    with:
+      service: ${{ matrix.service }}
+    secrets: inherit
+
+  gitops-update:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Values fayllarida immutable tagni yangilash
+        shell: bash
+        run: |
+          for file in apps/*/values.yaml; do
+            sed -i -E "s/^  tag: .*/  tag: ${GITHUB_SHA}/" "$file"
+          done
+      - name: GitOps commit
+        shell: bash
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@users.noreply.github.com
+          git add apps/*/values.yaml
+          git diff --cached --quiet && exit 0
+          git commit -m "chore(gitops): image ${GITHUB_SHA} [skip ci]"
+          git push
+

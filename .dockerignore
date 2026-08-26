@@ -1,0 +1,7 @@
+.git
+.github
+docs
+infra
+platform
+**/README.md
+

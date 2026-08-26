@@ -1,0 +1,57 @@
+include:
+  - local: .gitlab/ci/service-template.yml
+
+stages:
+  - validate
+  - build
+  - deploy
+
+helm-lint:
+  stage: validate
+  image: alpine/helm:3.17.3
+  script:
+    - helm lint charts/web-service
+    - helm lint charts/postgresql-ha
+    - helm lint charts/rabbitmq-ha
+    - for file in apps/*/values.yaml; do helm template test charts/web-service -f "$file" -f environments/dev.yaml >/dev/null; done
+
+build-services:
+  extends: .service-build
+  parallel:
+    matrix:
+      - SERVICE:
+          - dotnet-api
+          - python-api
+          - node-api
+          - go-api
+          - java-api
+          - php-api
+          - ruby-api
+          - rust-api
+          - nginx-web
+          - caddy-web
+          - busybox-web
+
+deploy-direct:
+  stage: deploy
+  image: alpine/helm:3.17.3
+  needs: [build-services]
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $KUBE_CONFIG_B64'
+      when: manual
+  before_script:
+    - mkdir -p "$HOME/.kube"
+    - echo "$KUBE_CONFIG_B64" | base64 -d > "$HOME/.kube/config"
+    - chmod 600 "$HOME/.kube/config"
+  script:
+    - |
+      for file in apps/*/values.yaml; do
+        service="$(basename "$(dirname "$file")")"
+        helm upgrade --install "$service" charts/web-service \
+          -n demo-apps --create-namespace \
+          -f "$file" -f environments/stage.yaml \
+          --set "image.repository=$CI_REGISTRY_IMAGE/kube-$service" \
+          --set-string "image.tag=$CI_COMMIT_SHA" \
+          --wait --atomic --timeout 5m
+      done
+

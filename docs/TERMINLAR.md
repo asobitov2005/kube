@@ -1,0 +1,31 @@
+# Qisqa terminlar
+
+- **Chart** — parametrli Kubernetes manifestlari paketi.
+- **Template** — `values` yordamida real YAMLga aylantiriladigan fayl.
+- **Values** — chartning o‘zgaruvchi qiymatlari.
+- **Release** — chartning clusterga o‘rnatilgan nusxasi.
+- **Deployment** — stateless Podlar soni va yangilanishini boshqaradi.
+- **Pod** — Kubernetes’dagi eng kichik ishlaydigan birlik.
+- **Service** — o‘zgarib turadigan Podlar oldidagi barqaror IP/DNS.
+- **Ingress** — domen/path bo‘yicha HTTP/HTTPS trafikni Service’ga yo‘naltiradi.
+- **StatefulSet** — barqaror nom va disk kerak bo‘lgan stateful Podlarni boshqaradi.
+- **PV** — cluster storage resursi.
+- **PVC** — Podning storage so‘rovi.
+- **StorageClass** — storage turi, provisioner, reclaim va performance siyosati.
+- **Operator** — PostgreSQL/RabbitMQ kabi murakkab tizim lifecycle’ini avtomatlashtiruvchi controller.
+- **CRD** — Kubernetes’ga yangi resource turi qo‘shadi.
+- **PgBouncer** — PostgreSQL connection pooler; ko‘p client ulanishlarini kamroq DB connection bilan xizmat qiladi.
+- **Readiness probe** — Pod trafik olishga tayyormi.
+- **Liveness probe** — container tirikmi; xato takrorlansa restart qilinadi.
+- **Request** — scheduler hisoblaydigan minimal CPU/RAM.
+- **Limit** — containerning maksimal CPU/RAM chegarasi.
+- **HPA** — yukga qarab replica sonini avtomatik o‘zgartiradi.
+- **PDB** — rejalashtirilgan uzilishda minimal mavjud Pod sonini himoya qiladi.
+- **Rolling update** — eski Podlarni yangi versiya bilan bosqichma-bosqich almashtiradi.
+- **Rollback** — oldingi ishlagan release/versiyaga qaytadi.
+- **GitOps** — Git’ni kerakli cluster holatining asosiy manbasi qilish usuli.
+- **Argo CD** — Git holati va real cluster holatini solishtirib sync qiladigan GitOps controller.
+- **Drift** — cluster holatining Git’dagi holatdan farq qilishi.
+- **Self-heal** — Argo CD driftni avtomatik tuzatishi.
+- **Prune** — Git’dan olib tashlangan resursni cluster’dan ham o‘chirish.
+

@@ -1,0 +1,11 @@
+fullnameOverride: php-api
+image:
+  repository: ghcr.io/asobitov2005/kube-php-api
+  tag: local
+containerPort: 8080
+ingress:
+  hosts:
+    - host: php.example.com
+      paths:
+        - path: /
+          pathType: Prefix

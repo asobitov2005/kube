@@ -1,0 +1,7 @@
+apiVersion: v2
+name: web-service
+description: Har xil stateless web servislar uchun qayta ishlatiladigan Helm chart
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+

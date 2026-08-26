@@ -1,0 +1,42 @@
+apiVersion: rabbitmq.com/v1beta1
+kind: RabbitmqCluster
+metadata:
+  name: {{ .Values.name }}
+  {{- if .Values.protectFromDeletion }}
+  annotations:
+    helm.sh/resource-policy: keep
+    argocd.argoproj.io/sync-options: Prune=false
+  {{- end }}
+spec:
+  replicas: {{ .Values.replicas }}
+  persistence:
+    storage: {{ .Values.persistence.storage }}
+    {{- if .Values.persistence.storageClassName }}
+    storageClassName: {{ .Values.persistence.storageClassName }}
+    {{- end }}
+  resources:
+    {{- toYaml .Values.resources | nindent 4 }}
+  terminationGracePeriodSeconds: 120
+  rabbitmq:
+    additionalConfig: |
+      cluster_partition_handling = pause_minority
+      default_queue_type = quorum
+      vm_memory_high_watermark.relative = 0.6
+  affinity:
+    podAntiAffinity:
+      {{- if .Values.affinity.required }}
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: {{ .Values.name }}
+          topologyKey: kubernetes.io/hostname
+      {{- else }}
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                app.kubernetes.io/name: {{ .Values.name }}
+            topologyKey: kubernetes.io/hostname
+      {{- end }}
+

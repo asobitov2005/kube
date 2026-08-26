@@ -1,0 +1,8 @@
+{{ .Release.Name }} o'rnatildi.
+
+Holat:
+  kubectl get all -n {{ .Release.Namespace }} -l app.kubernetes.io/instance={{ .Release.Name }}
+
+Lokal tekshirish:
+  kubectl port-forward -n {{ .Release.Namespace }} service/{{ include "web-service.fullname" . }} 8080:{{ .Values.service.port }}
+

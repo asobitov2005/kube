@@ -1,0 +1,7 @@
+apiVersion: v2
+name: postgresql-ha
+description: CloudNativePG asosidagi PostgreSQL HA va PgBouncer chart
+type: application
+version: 0.1.0
+appVersion: "18"
+

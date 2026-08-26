@@ -1,0 +1,11 @@
+fullnameOverride: nginx-web
+image:
+  repository: ghcr.io/asobitov2005/kube-nginx-web
+  tag: local
+containerPort: 8080
+ingress:
+  hosts:
+    - host: nginx.example.com
+      paths:
+        - path: /
+          pathType: Prefix

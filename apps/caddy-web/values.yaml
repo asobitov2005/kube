@@ -1,0 +1,11 @@
+fullnameOverride: caddy-web
+image:
+  repository: ghcr.io/asobitov2005/kube-caddy-web
+  tag: local
+containerPort: 8080
+ingress:
+  hosts:
+    - host: caddy.example.com
+      paths:
+        - path: /
+          pathType: Prefix

@@ -1,0 +1,11 @@
+fullnameOverride: ruby-api
+image:
+  repository: ghcr.io/asobitov2005/kube-ruby-api
+  tag: local
+containerPort: 8080
+ingress:
+  hosts:
+    - host: ruby.example.com
+      paths:
+        - path: /
+          pathType: Prefix
