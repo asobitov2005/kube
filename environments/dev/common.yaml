@@ -1,6 +1,6 @@
 replicaCount: 1
 image:
-  tag: local
+  tag: ba0d4b192ce57cf70e198465d03fd161f38a926b
   pullPolicy: IfNotPresent
 podDisruptionBudget:
   enabled: false
