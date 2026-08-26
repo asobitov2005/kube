@@ -1,0 +1,7 @@
+replicas: 1
+persistence:
+  storage: 2Gi
+  storageClassName: ""
+affinity:
+  required: false
+

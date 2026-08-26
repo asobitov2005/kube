@@ -4,11 +4,10 @@ Go standard kutubxonasi bilan yozilgan kichik HTTP API. Final image distroless v
 
 ```bash
 docker build -t ghcr.io/asobitov2005/kube-go-api:local apps/go-api
-helm upgrade --install go-api charts/web-service -n demo-apps --create-namespace \
-  -f apps/go-api/values.yaml -f environments/dev.yaml
-kubectl port-forward -n demo-apps service/go-api 8080:80
+helm upgrade --install go-api charts/web-service -n demo-dev --create-namespace \
+  -f apps/go-api/values.yaml -f environments/dev/common.yaml
+kubectl port-forward -n demo-dev service/go-api 8080:80
 curl http://localhost:8080/
 ```
 
-O‘chirish: `helm uninstall go-api -n demo-apps`.
-
+O‘chirish: `helm uninstall go-api -n demo-dev`.

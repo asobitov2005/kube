@@ -1,0 +1,7 @@
+replicas: 3
+persistence:
+  storage: 5Gi
+  storageClassName: ""
+affinity:
+  required: false
+

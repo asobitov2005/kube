@@ -1,0 +1,39 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: web-services-prod
+  namespace: argocd
+spec:
+  generators:
+    - list:
+        elements:
+          - service: dotnet-api
+          - service: python-api
+          - service: node-api
+          - service: go-api
+          - service: java-api
+          - service: php-api
+          - service: ruby-api
+          - service: rust-api
+          - service: nginx-web
+          - service: caddy-web
+          - service: busybox-web
+  template:
+    metadata:
+      name: '{{service}}-prod'
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/asobitov2005/kube.git
+        targetRevision: main
+        path: charts/web-service
+        helm:
+          valueFiles:
+            - ../../apps/{{service}}/values.yaml
+            - ../../environments/prod/common.yaml
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: demo-prod
+      syncPolicy:
+        syncOptions:
+          - CreateNamespace=true

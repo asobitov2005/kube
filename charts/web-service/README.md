@@ -4,11 +4,11 @@ Bitta chart barcha stateless HTTP servislar uchun ishlatiladi. Farq faqat app pa
 
 ```bash
 helm template python-api charts/web-service \
-  -f apps/python-api/values.yaml -f environments/dev.yaml
+  -f apps/python-api/values.yaml -f environments/dev/common.yaml
 
 helm upgrade --install python-api charts/web-service \
-  -n demo-apps --create-namespace \
-  -f apps/python-api/values.yaml -f environments/dev.yaml \
+  -n demo-dev --create-namespace \
+  -f apps/python-api/values.yaml -f environments/dev/common.yaml \
   --wait --atomic
 ```
 
@@ -23,6 +23,7 @@ Asosiy parametrlar:
 - `image`: repository, tag va pull policy;
 - `replicaCount`: Pod nusxalari;
 - `env`, `secretEnv`, `config`: konfiguratsiya;
+- `database.enabled`: PgBouncer hosti va credential Secret envlarini avtomatik ulash;
 - `probes`: readiness va liveness;
 - `resources`: CPU/RAM request va limit;
 - `topologySpread`: Podlarni node’lar bo‘ylab tarqatish;
@@ -34,8 +35,7 @@ Asosiy parametrlar:
 Tarix va rollback:
 
 ```bash
-helm history python-api -n demo-apps
-helm rollback python-api 1 -n demo-apps
-helm uninstall python-api -n demo-apps
+helm history python-api -n demo-dev
+helm rollback python-api 1 -n demo-dev
+helm uninstall python-api -n demo-dev
 ```
-

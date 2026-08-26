@@ -1,0 +1,34 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: data-services-prod
+  namespace: argocd
+spec:
+  generators:
+    - list:
+        elements:
+          - component: postgresql
+            chartPath: charts/postgresql-ha
+            namespace: demo-prod
+          - component: rabbitmq
+            chartPath: charts/rabbitmq-ha
+            namespace: messaging-prod
+  template:
+    metadata:
+      name: '{{component}}-prod'
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/asobitov2005/kube.git
+        targetRevision: main
+        path: '{{chartPath}}'
+        helm:
+          valueFiles:
+            - values.yaml
+            - ../../environments/prod/{{component}}.yaml
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: '{{namespace}}'
+      syncPolicy:
+        syncOptions:
+          - CreateNamespace=true

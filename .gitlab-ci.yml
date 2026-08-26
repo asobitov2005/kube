@@ -13,7 +13,7 @@ helm-lint:
     - helm lint charts/web-service
     - helm lint charts/postgresql-ha
     - helm lint charts/rabbitmq-ha
-    - for file in apps/*/values.yaml; do helm template test charts/web-service -f "$file" -f environments/dev.yaml >/dev/null; done
+    - for file in apps/*/values.yaml; do helm template test charts/web-service -f "$file" -f environments/dev/common.yaml >/dev/null; done
 
 build-services:
   extends: .service-build
@@ -48,10 +48,10 @@ deploy-direct:
       for file in apps/*/values.yaml; do
         service="$(basename "$(dirname "$file")")"
         helm upgrade --install "$service" charts/web-service \
-          -n demo-apps --create-namespace \
-          -f "$file" -f environments/stage.yaml \
+          -n demo-stage --create-namespace \
+          -f "$file" \
+          -f environments/stage/common.yaml \
           --set "image.repository=$CI_REGISTRY_IMAGE/kube-$service" \
           --set-string "image.tag=$CI_COMMIT_SHA" \
           --wait --atomic --timeout 5m
       done
-

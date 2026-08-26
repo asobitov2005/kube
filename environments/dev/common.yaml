@@ -1,10 +1,17 @@
 replicaCount: 1
+image:
+  tag: local
+  pullPolicy: IfNotPresent
 podDisruptionBudget:
   enabled: false
 autoscaling:
   enabled: false
 ingress:
   enabled: false
+  domain: dev.local
+topologySpread:
+  enabled: true
+  whenUnsatisfiable: ScheduleAnyway
 resources:
   requests:
     cpu: 25m
@@ -12,4 +19,3 @@ resources:
   limits:
     cpu: 150m
     memory: 128Mi
-

@@ -4,7 +4,7 @@
 
 ```text
 git push → test/lint → Docker build → image scan → registry push
-         → values.yaml image tag yangilash → Argo CD sync → rollout
+         → dev/common.yaml image tag yangilash → Argo CD sync → rollout
 ```
 
 Image tag `latest` emas, commit SHA bo‘ladi. Shu sabab aynan qaysi kod deploy qilingani va rollback qilinadigan versiya aniq.
@@ -14,8 +14,10 @@ Image tag `latest` emas, commit SHA bo‘ladi. Shu sabab aynan qaysi kod deploy 
 - `.github/workflows/reusable-build.yml` — boshqa repo ham chaqira oladigan build shabloni.
 - `.github/workflows/ci.yml` — 11 servisni matrix orqali parallel build qiladi.
 - Main branch’da image’larni GHCR’ga push qiladi.
-- Build muvaffaqiyatli bo‘lsa app `values.yaml` taglarini SHA bilan yangilaydi.
+- Build muvaffaqiyatli bo‘lsa `environments/dev/common.yaml` tagini SHA bilan yangilaydi.
 - Argo CD Git’dagi shu o‘zgarishni clusterga olib kiradi.
+
+Stage va production avtomatik ko‘tarilmaydi. Sinovdan o‘tgan SHA `environments/stage/common.yaml`, keyin `environments/prod/common.yaml`ga PR orqali ko‘chiriladi. Production Argo CD sync qo‘lda tasdiqlanadi.
 
 Repo Settings → Actions’da `Read and write permissions` kerak. Private GHCR image uchun clusterda `imagePullSecret` yarating va chart qiymatida ko‘rsating.
 
@@ -35,4 +37,3 @@ Chiqqan qiymatni terminal logiga yoki Git’ga yozmang; faqat GitLab CI variable
 ## Direct CD va Argo CD farqi
 
 Direct CD’da pipeline cluster credentialiga ega bo‘lib `helm upgrade` qiladi. GitOps’da pipeline faqat image va Git’dagi tagni yangilaydi; cluster ichidagi Argo CD Git’ni kuzatib deploy qiladi. GitOps audit va drift nazorati uchun qulayroq.
-

@@ -1,0 +1,11 @@
+instances: 1
+storage:
+  size: 2Gi
+  storageClass: ""
+affinity:
+  antiAffinityType: preferred
+pooler:
+  instances: 1
+backup:
+  enabled: false
+

@@ -1,0 +1,44 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: data-services-nonprod
+  namespace: argocd
+spec:
+  generators:
+    - matrix:
+        generators:
+          - list:
+              elements:
+                - component: postgresql
+                  chartPath: charts/postgresql-ha
+                  namespacePrefix: demo
+                - component: rabbitmq
+                  chartPath: charts/rabbitmq-ha
+                  namespacePrefix: messaging
+          - list:
+              elements:
+                - environment: dev
+                - environment: stage
+  template:
+    metadata:
+      name: '{{component}}-{{environment}}'
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/asobitov2005/kube.git
+        targetRevision: main
+        path: '{{chartPath}}'
+        helm:
+          valueFiles:
+            - values.yaml
+            - ../../environments/{{environment}}/{{component}}.yaml
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: '{{namespacePrefix}}-{{environment}}'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+

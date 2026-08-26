@@ -1,5 +1,6 @@
 replicaCount: 3
 image:
+  tag: local
   pullPolicy: IfNotPresent
 podDisruptionBudget:
   enabled: true
@@ -11,6 +12,7 @@ autoscaling:
   targetCPUUtilizationPercentage: 70
 ingress:
   enabled: true
+  domain: example.com
 topologySpread:
   enabled: true
   whenUnsatisfiable: DoNotSchedule
@@ -21,4 +23,3 @@ resources:
   limits:
     cpu: 500m
     memory: 512Mi
-

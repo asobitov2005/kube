@@ -1,0 +1,22 @@
+replicaCount: 2
+image:
+  tag: local
+  pullPolicy: IfNotPresent
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 1
+autoscaling:
+  enabled: false
+ingress:
+  enabled: true
+  domain: stage.example.com
+topologySpread:
+  enabled: true
+  whenUnsatisfiable: ScheduleAnyway
+resources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
+  limits:
+    cpu: 300m
+    memory: 256Mi

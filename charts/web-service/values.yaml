@@ -44,6 +44,18 @@ secretEnv: []
 config: {}
 envFromSecrets: []
 
+# DB ishlatadigan servis faqat `database.enabled: true` deydi. Host namespace'dan
+# avtomatik quriladi; kerak bo'lsa `host` bilan almashtirish mumkin.
+database:
+  enabled: false
+  host: ""
+  serviceName: postgres-pooler-rw
+  port: "5432"
+  name: app
+  credentialsSecret: app-db-credentials
+  usernameKey: username
+  passwordKey: password
+
 probes:
   readiness:
     enabled: true
@@ -85,12 +97,10 @@ autoscaling:
 ingress:
   enabled: false
   className: nginx
+  # Host avtomatik: <release-nomi>.<domain>
+  domain: local
   annotations: {}
-  hosts:
-    - host: app.local
-      paths:
-        - path: /
-          pathType: Prefix
+  hosts: []
   tls: []
 
 networkPolicy:
@@ -100,4 +110,3 @@ networkPolicy:
 nodeSelector: {}
 tolerations: []
 affinity: {}
-

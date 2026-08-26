@@ -2,8 +2,8 @@ SHELL := /bin/bash
 SERVICES := dotnet-api python-api node-api go-api java-api php-api ruby-api rust-api nginx-web caddy-web busybox-web
 REGISTRY ?= ghcr.io/asobitov2005
 TAG ?= local
-NAMESPACE ?= demo-apps
 ENV ?= dev
+NAMESPACE ?= demo-$(ENV)
 KIND_CLUSTER ?= kube-lab
 
 .PHONY: help cluster build-all load-kind deploy-all remove-all render lint status
@@ -13,6 +13,7 @@ help:
 	@echo "make build-all    - barcha image'larni build qilish"
 	@echo "make load-kind    - image'larni kind clusterga yuklash"
 	@echo "make deploy-all   - barcha servisni Helm bilan o'rnatish"
+	@echo "                     ENV=dev|stage|prod bilan muhit tanlanadi"
 	@echo "make status       - Pod va Service holatini ko'rish"
 	@echo "make remove-all   - stateless servislarni o'chirish"
 	@echo "make lint         - Helm chartlarni tekshirish"
@@ -34,7 +35,8 @@ deploy-all:
 	@set -e; for service in $(SERVICES); do \
 		helm upgrade --install $$service charts/web-service \
 			-n $(NAMESPACE) --create-namespace \
-			-f apps/$$service/values.yaml -f environments/$(ENV).yaml \
+			-f apps/$$service/values.yaml \
+			-f environments/$(ENV)/common.yaml \
 			--set image.repository=$(REGISTRY)/kube-$$service \
 			--set-string image.tag=$(TAG) --wait --timeout 5m; \
 	done
@@ -45,7 +47,8 @@ remove-all:
 render:
 	@set -e; for service in $(SERVICES); do \
 		helm template $$service charts/web-service \
-			-f apps/$$service/values.yaml -f environments/$(ENV).yaml >/dev/null; \
+			-f apps/$$service/values.yaml \
+			-f environments/$(ENV)/common.yaml >/dev/null; \
 	done
 
 lint:
@@ -56,4 +59,3 @@ lint:
 
 status:
 	kubectl get pods,services -n $(NAMESPACE) -o wide
-

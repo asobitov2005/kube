@@ -9,7 +9,7 @@ apps/                 11 servis: kod, Dockerfile, values.yaml, README
 charts/web-service/   barcha stateless web servislar uchun umumiy chart
 charts/postgresql-ha/ CloudNativePG + PgBouncer Pooler
 charts/rabbitmq-ha/   RabbitMQ Cluster Operator charti
-environments/         dev, stage, prod override qiymatlari
+environments/         dev, stage, prod uchun umumiy app va infra qiymatlari
 gitops/argocd/        ApplicationSet va infrastructure Applications
 .github/workflows/    GitHub Actions reusable CI
 .gitlab/ci/           GitLab reusable CI job
@@ -48,12 +48,12 @@ docker build -t ghcr.io/asobitov2005/kube-python-api:local apps/python-api
 kind load docker-image --name kube-lab ghcr.io/asobitov2005/kube-python-api:local
 
 helm upgrade --install python-api charts/web-service \
-  -n demo-apps --create-namespace \
+  -n demo-dev --create-namespace \
   -f apps/python-api/values.yaml \
-  -f environments/dev.yaml \
+  -f environments/dev/common.yaml \
   --wait --atomic
 
-kubectl port-forward -n demo-apps service/python-api 8080:80
+kubectl port-forward -n demo-dev service/python-api 8080:80
 ```
 
 Boshqa terminal:
@@ -84,19 +84,16 @@ image:
   repository: ghcr.io/tashkilot/mening-api
   tag: local
 containerPort: 8080
-ingress:
-  hosts:
-    - host: api.example.com
-      paths:
-        - path: /
-          pathType: Prefix
 ```
 
 ```bash
 helm upgrade --install mening-api charts/web-service \
   -n mening-loyiham --create-namespace \
-  -f apps/mening-api/values.yaml -f environments/dev.yaml
+  -f apps/mening-api/values.yaml \
+  -f environments/dev/common.yaml
 ```
+
+Chart hostni release nomi va muhit domenidan avtomatik yaratadi. DB kerak bo‘lsa app values ichida faqat `database.enabled: true` qo‘yiladi. Muhit tuzilishi va promotion: [environments/README.md](environments/README.md).
 
 ## kubectl, Helm va Argo CD
 
@@ -116,7 +113,7 @@ PostgreSQL/PgBouncer: [charts/postgresql-ha/README.md](charts/postgresql-ha/READ
 
 RabbitMQ: [charts/rabbitmq-ha/README.md](charts/rabbitmq-ha/README.md).
 
-FastAPI va .NET `DB_HOST=postgres-pooler-rw.demo-apps.svc.cluster.local` orqali PgBouncer’ga ulanadi. `/db` endpoint `SELECT 1` bilan ulanishni tekshiradi.
+FastAPI va .NET uchun chart `DB_HOST=postgres-pooler-rw.<joriy-namespace>.svc.cluster.local` qiymatini avtomatik yaratadi. `/db` endpoint `SELECT 1` bilan ulanishni tekshiradi.
 
 ## CI/CD va Argo CD
 
