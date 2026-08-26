@@ -1,7 +1,7 @@
 fullnameOverride: node-api
 image:
   repository: ghcr.io/asobitov2005/kube-node-api
-  tag: local
+  tag: 56f6ef1e1d08a3a551b303ad6a44a25f5fb66a54
 containerPort: 8080
 ingress:
   hosts:
